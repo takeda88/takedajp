@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TakedaJP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+/* ===== ART DIRECTION: TakedaJP — futuristic tech app, JP cyberpunk influence
+   Palette: deep black surfaces, electric cyan primary, gold accent
+   Typography: Orbitron (display) + Inter (body)
+   Density: spacious hero, dense features
+   Motion: expressive — 3D scene + scroll reveals ===== */
+
+:root {
+  --text-xs:   clamp(0.75rem,  0.7rem  + 0.25vw, 0.875rem);
+  --text-sm:   clamp(0.875rem, 0.8rem  + 0.35vw, 1rem);
+  --text-base: clamp(1rem,     0.95rem + 0.25vw, 1.125rem);
+  --text-lg:   clamp(1.125rem, 1rem    + 0.75vw, 1.5rem);
+  --text-xl:   clamp(1.5rem,   1.2rem  + 1.25vw, 2.25rem);
+  --text-2xl:  clamp(2rem,     1.2rem  + 2.5vw,  3.5rem);
+  --text-3xl:  clamp(2.5rem,   1rem    + 4vw,    5rem);
+  --text-hero: clamp(3rem,     0.5rem  + 7vw,    8rem);
+
+  --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem;
+  --space-4: 1rem; --space-5: 1.25rem; --space-6: 1.5rem;
+  --space-8: 2rem; --space-10: 2.5rem; --space-12: 3rem;
+  --space-16: 4rem; --space-20: 5rem; --space-24: 6rem;
+
+  --radius-sm: 0.375rem; --radius-md: 0.5rem; --radius-lg: 0.75rem;
+  --radius-xl: 1rem; --radius-full: 9999px;
+  --transition-interactive: 180ms cubic-bezier(0.16, 1, 0.3, 1);
+
+  --content-narrow: 640px; --content-default: 960px;
+  --content-wide: 1200px;
+
+  --font-display: 'Orbitron', 'Courier New', monospace;
+  --font-body: 'Inter', 'Helvetica Neue', sans-serif;
+}
+
+/* DARK (default — futuristic) */
+:root, [data-theme="dark"] {
+  --color-bg:              #040507;
+  --color-surface:         #080b10;
+  --color-surface-2:       #0c1018;
+  --color-surface-offset:  #101520;
+  --color-surface-dynamic: #161d2a;
+  --color-divider:         #1a2235;
+  --color-border:          #1e2840;
+
+  --color-text:            #e8edf5;
+  --color-text-muted:      #8a96aa;
+  --color-text-faint:      #445060;
+  --color-text-inverse:    #040507;
+
+  --color-primary:         #00d4ff;
+  --color-primary-hover:   #00b8e0;
+  --color-primary-active:  #0090b8;
+  --color-primary-highlight: #001e2b;
+
+  --color-accent:          #ffd700;
+  --color-accent-hover:    #e6c200;
+  --color-accent-dim:      #2a2200;
+
+  --color-success:         #00ff9d;
+  --color-error:           #ff3366;
+
+  --shadow-sm: 0 0 8px oklch(0.7 0.2 210 / 0.15);
+  --shadow-md: 0 0 20px oklch(0.7 0.2 210 / 0.2);
+  --shadow-lg: 0 0 40px oklch(0.7 0.2 210 / 0.25);
+  --glow-primary: 0 0 20px oklch(0.8 0.25 210 / 0.5), 0 0 60px oklch(0.8 0.25 210 / 0.2);
+  --glow-accent: 0 0 20px oklch(0.9 0.2 90 / 0.5);
+}
+
+/* LIGHT MODE */
+[data-theme="light"] {
+  --color-bg:              #f0f4fa;
+  --color-surface:         #f8faff;
+  --color-surface-2:       #ffffff;
+  --color-surface-offset:  #e8edf8;
+  --color-surface-dynamic: #dde3f0;
+  --color-divider:         #ccd3e0;
+  --color-border:          #b8c2d8;
+
+  --color-text:            #0d1526;
+  --color-text-muted:      #4a5570;
+  --color-text-faint:      #8890a8;
+  --color-text-inverse:    #f0f4fa;
+
+  --color-primary:         #0080a0;
+  --color-primary-hover:   #006080;
+  --color-primary-active:  #004060;
+  --color-primary-highlight: #d0eef8;
+
+  --color-accent:          #c49000;
+  --color-accent-hover:    #a07800;
+  --color-accent-dim:      #fff8d0;
+
+  --shadow-sm: 0 1px 3px oklch(0.2 0.05 240 / 0.1);
+  --shadow-md: 0 4px 16px oklch(0.2 0.05 240 / 0.12);
+  --shadow-lg: 0 12px 40px oklch(0.2 0.05 240 / 0.15);
+  --glow-primary: 0 0 12px oklch(0.5 0.2 210 / 0.3);
+  --glow-accent: 0 0 12px oklch(0.7 0.15 90 / 0.3);
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) {
+    --color-bg: #f0f4fa; --color-surface: #f8faff; --color-surface-2: #ffffff;
+    --color-surface-offset: #e8edf8; --color-surface-dynamic: #dde3f0;
+    --color-divider: #ccd3e0; --color-border: #b8c2d8;
+    --color-text: #0d1526; --color-text-muted: #4a5570; --color-text-faint: #8890a8;
+    --color-text-inverse: #f0f4fa; --color-primary: #0080a0;
+    --color-primary-hover: #006080; --color-primary-active: #004060;
+    --color-primary-highlight: #d0eef8; --color-accent: #c49000;
+    --color-accent-hover: #a07800; --color-accent-dim: #fff8d0;
+    --shadow-sm: 0 1px 3px oklch(0.2 0.05 240 / 0.1);
+    --shadow-md: 0 4px 16px oklch(0.2 0.05 240 / 0.12);
+    --shadow-lg: 0 12px 40px oklch(0.2 0.05 240 / 0.15);
+    --glow-primary: 0 0 12px oklch(0.5 0.2 210 / 0.3);
+    --glow-accent: 0 0 12px oklch(0.7 0.15 90 / 0.3);
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html {
+  -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility; scroll-behavior: smooth;
+  scroll-padding-top: var(--space-16);
+}
+body {
+  min-height: 100dvh; line-height: 1.6;
+  font-family: var(--font-body); font-size: var(--text-base);
+  color: var(--color-text); background-color: var(--color-bg);
+  overflow-x: hidden;
+}
+img, picture, video, canvas, svg { display: block; max-width: 100%; height: auto; }
+h1,h2,h3,h4,h5,h6 { text-wrap: balance; line-height: 1.15; }
+p, li { text-wrap: pretty; max-width: 72ch; }
+button { cursor: pointer; background: none; border: none; font: inherit; color: inherit; }
+a { text-decoration: none; color: inherit; }
+::selection { background: oklch(from var(--color-primary) l c h / 0.25); color: var(--color-text); }
+:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; border-radius: var(--radius-sm); }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important; animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important; scroll-behavior: auto !important;
+  }
+}
+
+/* ===== SCANLINE OVERLAY ===== */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, oklch(0 0 0 / 0.03) 2px, oklch(0 0 0 / 0.03) 4px);
+}
+
+/* ===== HEADER / NAV ===== */
+header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: var(--space-4) var(--space-8);
+  background: oklch(from var(--color-bg) l c h / 0.85);
+  backdrop-filter: blur(16px) saturate(1.4);
+  border-bottom: 1px solid oklch(from var(--color-primary) l c h / 0.15);
+  transition: background var(--transition-interactive), border-color var(--transition-interactive);
+}
+
+.logo {
+  display: flex; align-items: center; gap: var(--space-3);
+  font-family: var(--font-display); font-size: var(--text-lg);
+  font-weight: 700; letter-spacing: 0.08em;
+  color: var(--color-primary); text-shadow: var(--glow-primary);
+}
+.logo svg { flex-shrink: 0; }
+
+nav { display: flex; align-items: center; gap: var(--space-6); }
+nav a {
+  font-size: var(--text-sm); font-weight: 500; letter-spacing: 0.05em;
+  text-transform: uppercase; color: var(--color-text-muted);
+  transition: color var(--transition-interactive);
+  position: relative;
+}
+nav a::after {
+  content: ''; position: absolute; bottom: -2px; left: 0; right: 0;
+  height: 1px; background: var(--color-primary);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform var(--transition-interactive);
+}
+nav a:hover { color: var(--color-primary); }
+nav a:hover::after { transform: scaleX(1); }
+
+.header-actions { display: flex; align-items: center; gap: var(--space-4); }
+
+.btn-theme {
+  width: 40px; height: 40px; border-radius: var(--radius-full);
+  border: 1px solid oklch(from var(--color-primary) l c h / 0.3);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--color-text-muted);
+  transition: border-color var(--transition-interactive), color var(--transition-interactive), box-shadow var(--transition-interactive);
+}
+.btn-theme:hover { border-color: var(--color-primary); color: var(--color-primary); box-shadow: var(--glow-primary); }
+
+.btn-cta {
+  padding: var(--space-2) var(--space-6);
+  background: var(--color-primary); color: var(--color-text-inverse);
+  border-radius: var(--radius-sm); font-size: var(--text-sm);
+  font-family: var(--font-display); font-weight: 600; letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: background var(--transition-interactive), box-shadow var(--transition-interactive), transform var(--transition-interactive);
+}
+.btn-cta:hover { background: var(--color-primary-hover); box-shadow: var(--glow-primary); transform: translateY(-1px); }
+.btn-cta:active { transform: translateY(0); }
+
+.nav-mobile-toggle {
+  display: none; width: 44px; height: 44px; align-items: center; justify-content: center;
+  color: var(--color-text-muted); border-radius: var(--radius-md);
+}
+
+/* ===== HERO ===== */
+#hero {
+  position: relative; min-height: 100dvh;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+#canvas-3d {
+  position: absolute; inset: 0; z-index: 1;
+  width: 100%; height: 100%;
+}
+.hero-content {
+  position: relative; z-index: 2;
+  text-align: center; padding: var(--space-8) var(--space-4);
+  max-width: 900px;
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: var(--space-2);
+  padding: var(--space-1) var(--space-4);
+  border: 1px solid oklch(from var(--color-primary) l c h / 0.4);
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs); font-family: var(--font-display);
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--color-primary); background: oklch(from var(--color-primary) l c h / 0.05);
+  margin-bottom: var(--space-6);
+  animation: fadeInDown 0.8s cubic-bezier(0.16,1,0.3,1) both;
+}
+.badge-dot {
+  width: 6px; height: 6px; border-radius: var(--radius-full);
+  background: var(--color-primary); box-shadow: 0 0 6px var(--color-primary);
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
+
+h1.hero-title {
+  font-family: var(--font-display); font-size: var(--text-hero);
+  font-weight: 900; letter-spacing: 0.04em; line-height: 1;
+  text-transform: uppercase; margin-bottom: var(--space-4);
+  animation: fadeInUp 0.8s 0.2s cubic-bezier(0.16,1,0.3,1) both;
+}
+.title-primary { color: var(--color-text); display: block; }
+.title-accent {
+  color: var(--color-primary);
+  text-shadow: var(--glow-primary);
+  display: block;
+}
+.hero-sub {
+  font-size: var(--text-lg); color: var(--color-text-muted);
+  max-width: 55ch; margin: 0 auto var(--space-8);
+  animation: fadeInUp 0.8s 0.35s cubic-bezier(0.16,1,0.3,1) both;
+}
+.hero-actions {
+  display: flex; align-items: center; justify-content: center;
+  gap: var(--space-4); flex-wrap: wrap;
+  animation: fadeInUp 0.8s 0.5s cubic-bezier(0.16,1,0.3,1) both;
+}
+.btn-primary-lg {
+  padding: var(--space-4) var(--space-10);
+  background: var(--color-primary); color: var(--color-text-inverse);
+  border-radius: var(--radius-sm); font-size: var(--text-base);
+  font-family: var(--font-display); font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; display: inline-flex; align-items: center; gap: var(--space-2);
+  transition: background var(--transition-interactive), box-shadow var(--transition-interactive), transform var(--transition-interactive);
+  box-shadow: var(--glow-primary);
+}
+.btn-primary-lg:hover { background: var(--color-primary-hover); box-shadow: 0 0 40px oklch(from var(--color-primary) l c h / 0.6); transform: translateY(-2px); }
+.btn-ghost-lg {
+  padding: var(--space-4) var(--space-8);
+  border: 1px solid oklch(from var(--color-text) l c h / 0.2);
+  border-radius: var(--radius-sm); font-size: var(--text-base);
+  font-family: var(--font-display); font-weight: 600; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--color-text-muted);
+  transition: border-color var(--transition-interactive), color var(--transition-interactive), box-shadow var(--transition-interactive), transform var(--transition-interactive);
+}
+.btn-ghost-lg:hover { border-color: var(--color-primary); color: var(--color-primary); box-shadow: var(--glow-primary); transform: translateY(-2px); }
+
+.hero-stats {
+  display: flex; align-items: center; justify-content: center; gap: var(--space-12);
+  margin-top: var(--space-16); padding-top: var(--space-8);
+  border-top: 1px solid oklch(from var(--color-text) l c h / 0.06);
+  animation: fadeInUp 0.8s 0.65s cubic-bezier(0.16,1,0.3,1) both;
+  flex-wrap: wrap;
+}
+.stat { text-align: center; }
+.stat-num {
+  display: block; font-family: var(--font-display); font-size: var(--text-2xl);
+  font-weight: 900; color: var(--color-primary); letter-spacing: 0.04em;
+  text-shadow: var(--glow-primary);
+}
+.stat-label { font-size: var(--text-xs); color: var(--color-text-muted); letter-spacing: 0.1em; text-transform: uppercase; }
+
+/* ===== SCROLL INDICATOR ===== */
+.scroll-indicator {
+  position: absolute; bottom: var(--space-8); left: 50%; transform: translateX(-50%);
+  z-index: 2; display: flex; flex-direction: column; align-items: center; gap: var(--space-2);
+  color: var(--color-text-faint); font-size: var(--text-xs); letter-spacing: 0.1em;
+  text-transform: uppercase; animation: fadeIn 1s 1s both;
+}
+.scroll-line {
+  width: 1px; height: 40px; background: linear-gradient(to bottom, var(--color-primary), transparent);
+  animation: scrollDown 1.5s ease-in-out infinite;
+}
+@keyframes scrollDown { 0%{transform:scaleY(0);transform-origin:top} 50%{transform:scaleY(1);transform-origin:top} 51%{transform:scaleY(1);transform-origin:bottom} 100%{transform:scaleY(0);transform-origin:bottom} }
+
+/* ===== SECTIONS COMMON ===== */
+section { position: relative; z-index: 1; }
+.container { max-width: var(--content-wide); margin-inline: auto; padding-inline: var(--space-8); }
+.section-label {
+  font-size: var(--text-xs); font-family: var(--font-display);
+  letter-spacing: 0.15em; text-transform: uppercase; color: var(--color-primary);
+  margin-bottom: var(--space-3);
+}
+.section-title {
+  font-family: var(--font-display); font-size: var(--text-2xl);
+  font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
+  color: var(--color-text); margin-bottom: var(--space-4);
+}
+.section-body { font-size: var(--text-base); color: var(--color-text-muted); max-width: 55ch; }
+
+/* REVEAL animations */
+.reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1); }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+
+/* ===== FEATURES ===== */
+#features {
+  padding-block: clamp(var(--space-16), 10vw, var(--space-24));
+  background: linear-gradient(to bottom, var(--color-bg), var(--color-surface));
+}
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--space-4);
+  margin-top: var(--space-12);
+}
+.feature-card {
+  background: var(--color-surface-2);
+  border: 1px solid oklch(from var(--color-text) l c h / 0.07);
+  border-radius: var(--radius-lg);
+  padding: var(--space-8);
+  transition: border-color var(--transition-interactive), box-shadow var(--transition-interactive), transform var(--transition-interactive);
+  position: relative; overflow: hidden;
+}
+.feature-card::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, oklch(from var(--color-primary) l c h / 0.04) 0%, transparent 60%);
+  opacity: 0; transition: opacity var(--transition-interactive);
+}
+.feature-card:hover { border-color: oklch(from var(--color-primary) l c h / 0.3); box-shadow: var(--glow-primary); transform: translateY(-4px); }
+.feature-card:hover::before { opacity: 1; }
+.feature-card.large { grid-column: span 7; }
+.feature-card.medium { grid-column: span 5; }
+.feature-card.full { grid-column: span 12; display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-8); align-items: center; }
+.feature-card.small { grid-column: span 4; }
+
+.feature-icon {
+  width: 48px; height: 48px; margin-bottom: var(--space-5);
+  color: var(--color-primary); opacity: 0.9;
+}
+.feature-title {
+  font-family: var(--font-display); font-size: var(--text-lg);
+  font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
+  color: var(--color-text); margin-bottom: var(--space-3);
+}
+.feature-desc { font-size: var(--text-sm); color: var(--color-text-muted); }
+
+/* Holographic feature visual */
+.feature-visual {
+  border-radius: var(--radius-md);
+  background: var(--color-surface-offset);
+  border: 1px solid oklch(from var(--color-primary) l c h / 0.1);
+  padding: var(--space-4); position: relative; overflow: hidden;
+}
+.holo-grid {
+  display: grid; grid-template-columns: repeat(8, 1fr); gap: 4px;
+}
+.holo-cell {
+  height: 24px; border-radius: 2px;
+  background: oklch(from var(--color-primary) l c h / 0.1);
+  animation: holoFlicker 3s ease-in-out infinite;
+}
+.holo-cell:nth-child(odd) { animation-delay: 0.3s; }
+.holo-cell.active { background: oklch(from var(--color-primary) l c h / 0.6); box-shadow: 0 0 6px var(--color-primary); }
+@keyframes holoFlicker { 0%,100%{opacity:1} 50%{opacity:0.6} }
+
+/* ===== TECH STACK ===== */
+#tech {
+  padding-block: clamp(var(--space-12), 8vw, var(--space-20));
+  background: var(--color-surface);
+  border-top: 1px solid oklch(from var(--color-text) l c h / 0.05);
+  border-bottom: 1px solid oklch(from var(--color-text) l c h / 0.05);
+}
+.tech-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: var(--space-12); flex-wrap: wrap; gap: var(--space-4); }
+.tech-cards {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(min(200px, 100%), 1fr)); gap: var(--space-4);
+}
+.tech-card {
+  background: var(--color-surface-2);
+  border: 1px solid oklch(from var(--color-text) l c h / 0.07);
+  border-radius: var(--radius-lg); padding: var(--space-6);
+  display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-3);
+  transition: border-color var(--transition-interactive), box-shadow var(--transition-interactive), transform var(--transition-interactive);
+}
+.tech-card:hover { border-color: oklch(from var(--color-primary) l c h / 0.4); box-shadow: var(--glow-primary); transform: translateY(-3px); }
+.tech-name {
+  font-family: var(--font-display); font-size: var(--text-sm);
+  font-weight: 600; letter-spacing: 0.06em; color: var(--color-text);
+}
+.tech-tag {
+  font-size: var(--text-xs); color: var(--color-primary);
+  background: oklch(from var(--color-primary) l c h / 0.08);
+  padding: 2px var(--space-2); border-radius: var(--radius-full);
+  letter-spacing: 0.06em;
+}
+.tech-bar { width: 100%; height: 2px; background: oklch(from var(--color-text) l c h / 0.08); border-radius: var(--radius-full); overflow: hidden; }
+.tech-bar-fill { height: 100%; background: var(--color-primary); border-radius: var(--radius-full); box-shadow: 0 0 6px var(--color-primary); transition: width 1.2s cubic-bezier(0.16,1,0.3,1); width: 0; }
+.tech-bar-fill.animated { width: var(--fill-width, 80%); }
+
+/* ===== CTA SECTION ===== */
+#cta {
+  padding-block: clamp(var(--space-16), 10vw, var(--space-24));
+  background: var(--color-bg);
+  text-align: center;
+}
+.cta-box {
+  max-width: var(--content-default); margin-inline: auto;
+  background: var(--color-surface-2);
+  border: 1px solid oklch(from var(--color-primary) l c h / 0.15);
+  border-radius: var(--radius-xl); padding: clamp(var(--space-12), 6vw, var(--space-20));
+  position: relative; overflow: hidden;
+}
+.cta-box::before {
+  content: ''; position: absolute; top: -50%; left: -20%;
+  width: 60%; height: 200%;
+  background: radial-gradient(ellipse, oklch(from var(--color-primary) l c h / 0.05) 0%, transparent 70%);
+  pointer-events: none;
+}
+.cta-box::after {
+  content: ''; position: absolute; bottom: -50%; right: -20%;
+  width: 60%; height: 200%;
+  background: radial-gradient(ellipse, oklch(from var(--color-accent) l c h / 0.04) 0%, transparent 70%);
+  pointer-events: none;
+}
+.cta-title {
+  font-family: var(--font-display); font-size: var(--text-3xl);
+  font-weight: 900; letter-spacing: 0.04em; text-transform: uppercase;
+  color: var(--color-text); margin-bottom: var(--space-4); position: relative; z-index: 1;
+}
+.cta-title span { color: var(--color-primary); text-shadow: var(--glow-primary); }
+.cta-sub { color: var(--color-text-muted); margin-bottom: var(--space-8); max-width: 50ch; margin-inline: auto; position: relative; z-index: 1; }
+.cta-actions { display: flex; align-items: center; justify-content: center; gap: var(--space-4); flex-wrap: wrap; position: relative; z-index: 1; }
+
+/* ===== FOOTER ===== */
+footer {
+  background: var(--color-surface);
+  border-top: 1px solid oklch(from var(--color-text) l c h / 0.06);
+  padding-block: var(--space-10);
+}
+.footer-inner {
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: var(--space-6);
+}
+.footer-copy { font-size: var(--text-xs); color: var(--color-text-faint); letter-spacing: 0.05em; }
+.footer-links { display: flex; gap: var(--space-6); }
+.footer-links a { font-size: var(--text-xs); color: var(--color-text-faint); letter-spacing: 0.05em; text-transform: uppercase; transition: color var(--transition-interactive); }
+.footer-links a:hover { color: var(--color-primary); }
+
+/* ===== MOBILE ===== */
+@media (max-width: 768px) {
+  nav { display: none; }
+  nav.open { display: flex; flex-direction: column; position: fixed; top: 65px; left: 0; right: 0; bottom: 0; background: oklch(from var(--color-bg) l c h / 0.97); padding: var(--space-8); z-index: 99; align-items: center; justify-content: center; gap: var(--space-8); }
+  nav.open a { font-size: var(--text-xl); }
+  .nav-mobile-toggle { display: flex; }
+  .features-grid { grid-template-columns: 1fr; }
+  .feature-card.large, .feature-card.medium, .feature-card.full, .feature-card.small { grid-column: span 1; }
+  .feature-card.full { grid-template-columns: 1fr; }
+  .header-actions .btn-cta { display: none; }
+  .container { padding-inline: var(--space-4); }
+  .footer-inner { flex-direction: column; align-items: flex-start; }
+}
+
+@keyframes fadeInDown { from{opacity:0;transform:translateY(-20px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeInUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+</style>
+</head>
+<body>
+
+<a href="#main" class="sr-only">Pular para conteúdo</a>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-label="TakedaJP logo">
+      <polygon points="16,2 28,9 28,23 16,30 4,23 4,9" stroke="currentColor" stroke-width="1.5" fill="none"/>
+      <polygon points="16,8 23,12 23,20 16,24 9,20 9,12" stroke="currentColor" stroke-width="1" fill="none" opacity="0.5"/>
+      <circle cx="16" cy="16" r="3" fill="currentColor"/>
+      <line x1="16" y1="2" x2="16" y2="8" stroke="currentColor" stroke-width="1.5"/>
+      <line x1="16" y1="24" x2="16" y2="30" stroke="currentColor" stroke-width="1.5"/>
+    </svg>
+    TakedaJP
+  </div>
+  <nav id="main-nav">
+    <a href="#features">Recursos</a>
+    <a href="#tech">Tecnologia</a>
+    <a href="#cta">Contato</a>
+  </nav>
+  <div class="header-actions">
+    <button class="btn-theme" data-theme-toggle aria-label="Alternar modo">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+    <a href="#cta" class="btn-cta">Começar</a>
+    <button class="nav-mobile-toggle" id="nav-toggle" aria-label="Menu">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+  </div>
+</header>
+
+<!-- HERO -->
+<section id="hero" role="banner">
+  <canvas id="canvas-3d" aria-hidden="true"></canvas>
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="badge-dot"></span>
+      Sistema Ativo · v2.0
+    </div>
+    <h1 class="hero-title">
+      <span class="title-primary">Takeda</span>
+      <span class="title-accent">JP</span>
+    </h1>
+    <p class="hero-sub">Tecnologia de próxima geração. Construída para o futuro, entregue agora. Experiências digitais que transcendem o ordinário.</p>
+    <div class="hero-actions">
+      <a href="#features" class="btn-primary-lg">
+        Explorar
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="#cta" class="btn-ghost-lg">Falar conosco</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><span class="stat-num" data-count="99">0</span><span class="stat-label">% Uptime</span></div>
+      <div class="stat"><span class="stat-num" data-count="2.4">0</span><span class="stat-label">ms Latência</span></div>
+      <div class="stat"><span class="stat-num" data-count="50">0</span><span class="stat-label">K+ Usuários</span></div>
+      <div class="stat"><span class="stat-num" data-count="128">0</span><span class="stat-label">Países</span></div>
+    </div>
+  </div>
+  <div class="scroll-indicator" aria-hidden="true">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<main id="main">
+<section id="features">
+  <div class="container">
+    <div class="reveal">
+      <p class="section-label">// Recursos</p>
+      <h2 class="section-title">Engenharia sem compromisso</h2>
+      <p class="section-body">Cada componente é projetado para máxima performance e elegância técnica.</p>
+    </div>
+    <div class="features-grid">
+      <!-- Card grande -->
+      <div class="feature-card large reveal reveal-delay-1">
+        <svg class="feature-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="4" y="4" width="40" height="40" rx="4"/>
+          <path d="M14 24l6 6 14-14" stroke-width="2"/>
+          <circle cx="24" cy="24" r="16" stroke-width="1" opacity="0.3"/>
+        </svg>
+        <h3 class="feature-title">Processamento em Tempo Real</h3>
+        <p class="feature-desc">Pipelines de dados de alta velocidade com latência submilissegundo. Processamento paralelo com arquitetura distribuída de próxima geração.</p>
+      </div>
+      <!-- Card médio -->
+      <div class="feature-card medium reveal reveal-delay-2">
+        <svg class="feature-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M24 4L44 14v20L24 44 4 34V14z"/>
+          <path d="M24 4v40M4 14l20 10 20-10"/>
+        </svg>
+        <h3 class="feature-title">Arquitetura 3D</h3>
+        <p class="feature-desc">Estruturas de dados multidimensionais para visualizações imersivas e análises espaciais.</p>
+      </div>
+      <!-- Card full com visual -->
+      <div class="feature-card full reveal reveal-delay-1">
+        <div>
+          <svg class="feature-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="24" cy="24" r="20"/>
+            <path d="M24 4v8M24 36v8M4 24h8M36 24h8"/>
+            <circle cx="24" cy="24" r="8"/>
+          </svg>
+          <h3 class="feature-title">Inteligência Neural</h3>
+          <p class="feature-desc">Modelos de IA adaptativos que aprendem com seus padrões de uso. Auto-otimização contínua para performance máxima sem intervenção manual.</p>
+        </div>
+        <div class="feature-visual">
+          <div class="holo-grid">
+            <div class="holo-cell active"></div><div class="holo-cell"></div><div class="holo-cell active"></div>
+            <div class="holo-cell"></div><div class="holo-cell active"></div><div class="holo-cell active"></div>
+            <div class="holo-cell"></div><div class="holo-cell active"></div>
+            <div class="holo-cell"></div><div class="holo-cell active"></div><div class="holo-cell"></div>
+            <div class="holo-cell active"></div><div class="holo-cell"></div><div class="holo-cell active"></div>
+            <div class="holo-cell active"></div><div class="holo-cell"></div>
+            <div class="holo-cell active"></div><div class="holo-cell"></div><div class="holo-cell active"></div>
+            <div class="holo-cell active"></div><div class="holo-cell"></div><div class="holo-cell active"></div>
+            <div class="holo-cell"></div><div class="holo-cell active"></div>
+          </div>
+        </div>
+      </div>
+      <!-- 3 cards pequenos -->
+      <div class="feature-card small reveal reveal-delay-1">
+        <svg class="feature-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M4 24h8l6-16 8 32 6-16h12"/>
+        </svg>
+        <h3 class="feature-title">Analytics</h3>
+        <p class="feature-desc">Métricas em tempo real com visualizações interativas.</p>
+      </div>
+      <div class="feature-card small reveal reveal-delay-2">
+        <svg class="feature-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="8" y="16" width="32" height="24" rx="2"/>
+          <path d="M16 16V12a8 8 0 0116 0v4"/>
+          <circle cx="24" cy="28" r="3"/>
+        </svg>
+        <h3 class="feature-title">Segurança</h3>
+        <p class="feature-desc">Criptografia de ponta com auditoria zero-knowledge.</p>
+      </div>
+      <div class="feature-card small reveal reveal-delay-3">
+        <svg class="feature-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="24" cy="24" r="20"/>
+          <path d="M24 14v10l6 6"/>
+        </svg>
+        <h3 class="feature-title">Automação</h3>
+        <p class="feature-desc">Workflows inteligentes que se adaptam e evoluem.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TECH STACK -->
+<section id="tech">
+  <div class="container">
+    <div class="tech-header">
+      <div class="reveal">
+        <p class="section-label">// Stack Técnico</p>
+        <h2 class="section-title">Construído com excelência</h2>
+      </div>
+      <p class="section-body reveal reveal-delay-1" style="max-width: 40ch; text-align: right;">Tecnologias de ponta selecionadas para cada camada da arquitetura.</p>
+    </div>
+    <div class="tech-cards">
+      <div class="tech-card reveal reveal-delay-1">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="1.5"><polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5"/></svg>
+        <span class="tech-name">Three.js</span>
+        <span class="tech-tag">3D Engine</span>
+        <div class="tech-bar"><div class="tech-bar-fill" style="--fill-width: 95%"></div></div>
+      </div>
+      <div class="tech-card reveal reveal-delay-2">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M8 12h8M12 8v8"/></svg>
+        <span class="tech-name">WebGPU</span>
+        <span class="tech-tag">Graphics</span>
+        <div class="tech-bar"><div class="tech-bar-fill" style="--fill-width: 88%"></div></div>
+      </div>
+      <div class="tech-card reveal reveal-delay-3">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        <span class="tech-name">WASM</span>
+        <span class="tech-tag">Runtime</span>
+        <div class="tech-bar"><div class="tech-bar-fill" style="--fill-width: 92%"></div></div>
+      </div>
+      <div class="tech-card reveal reveal-delay-1">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        <span class="tech-name">Rust</span>
+        <span class="tech-tag">Backend</span>
+        <div class="tech-bar"><div class="tech-bar-fill" style="--fill-width: 85%"></div></div>
+      </div>
+      <div class="tech-card reveal reveal-delay-2">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="1.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        <span class="tech-name">TypeScript</span>
+        <span class="tech-tag">Frontend</span>
+        <div class="tech-bar"><div class="tech-bar-fill" style="--fill-width: 98%"></div></div>
+      </div>
+      <div class="tech-card reveal reveal-delay-3">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="1.5"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+        <span class="tech-name">Kubernetes</span>
+        <span class="tech-tag">Infrastructure</span>
+        <div class="tech-bar"><div class="tech-bar-fill" style="--fill-width: 80%"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta">
+  <div class="container">
+    <div class="cta-box reveal">
+      <h2 class="cta-title">Pronto para o <span>futuro</span>?</h2>
+      <p class="cta-sub">Junte-se a mais de 50 mil usuários que já experimentaram a próxima geração de tecnologia.</p>
+      <div class="cta-actions">
+        <a href="#" class="btn-primary-lg" target="_blank" rel="noopener noreferrer">
+          Criar conta grátis
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="#" class="btn-ghost-lg" target="_blank" rel="noopener noreferrer">Ver documentação</a>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div class="logo" style="font-size: var(--text-base);">
+        <svg width="24" height="24" viewBox="0 0 32 32" fill="none" aria-label="TakedaJP">
+          <polygon points="16,2 28,9 28,23 16,30 4,23 4,9" stroke="currentColor" stroke-width="1.5" fill="none"/>
+          <circle cx="16" cy="16" r="3" fill="currentColor"/>
+        </svg>
+        TakedaJP
+      </div>
+      <p class="footer-copy">© 2026 TakedaJP · Todos os direitos reservados</p>
+      <nav class="footer-links" aria-label="Links do rodapé">
+        <a href="#" target="_blank" rel="noopener noreferrer">Privacidade</a>
+        <a href="#" target="_blank" rel="noopener noreferrer">Termos</a>
+        <a href="#" target="_blank" rel="noopener noreferrer">GitHub</a>
+      </nav>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ===== THEME TOGGLE =====
+(function(){
+  const t = document.querySelector('[data-theme-toggle]');
+  const r = document.documentElement;
+  let d = 'dark'; // force dark as default for futuristic aesthetic
+  r.setAttribute('data-theme', d);
+  if(t) t.addEventListener('click', () => {
+    d = d === 'dark' ? 'light' : 'dark';
+    r.setAttribute('data-theme', d);
+    t.innerHTML = d === 'dark'
+      ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>'
+      : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>';
+  });
+})();
+
+// ===== MOBILE NAV =====
+const toggle = document.getElementById('nav-toggle');
+const nav = document.getElementById('main-nav');
+toggle && toggle.addEventListener('click', () => nav.classList.toggle('open'));
+
+// ===== THREE.JS 3D SCENE =====
+(function() {
+  const canvas = document.getElementById('canvas-3d');
+  if (!canvas || typeof THREE === 'undefined') return;
+
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(60, canvas.clientWidth / canvas.clientHeight, 0.1, 100);
+  camera.position.set(0, 0, 5);
+
+  // Geometric wireframe objects
+  const objects = [];
+
+  // Main icosahedron
+  const icoGeo = new THREE.IcosahedronGeometry(1.4, 1);
+  const icoMat = new THREE.MeshBasicMaterial({ color: 0x00d4ff, wireframe: true, transparent: true, opacity: 0.25 });
+  const ico = new THREE.Mesh(icoGeo, icoMat);
+  scene.add(ico);
+  objects.push({ mesh: ico, rx: 0.003, ry: 0.005 });
+
+  // Inner octahedron
+  const octGeo = new THREE.OctahedronGeometry(0.9);
+  const octMat = new THREE.MeshBasicMaterial({ color: 0x00d4ff, wireframe: true, transparent: true, opacity: 0.4 });
+  const oct = new THREE.Mesh(octGeo, octMat);
+  scene.add(oct);
+  objects.push({ mesh: oct, rx: -0.006, ry: 0.003 });
+
+  // Torus
+  const torGeo = new THREE.TorusGeometry(2.2, 0.015, 6, 80);
+  const torMat = new THREE.MeshBasicMaterial({ color: 0x00d4ff, transparent: true, opacity: 0.2 });
+  const tor = new THREE.Mesh(torGeo, torMat);
+  tor.rotation.x = Math.PI / 4;
+  scene.add(tor);
+  objects.push({ mesh: tor, rx: 0.002, ry: 0.004 });
+
+  // Second torus rotated
+  const tor2Geo = new THREE.TorusGeometry(2.5, 0.01, 6, 80);
+  const tor2Mat = new THREE.MeshBasicMaterial({ color: 0xffd700, transparent: true, opacity: 0.12 });
+  const tor2 = new THREE.Mesh(tor2Geo, tor2Mat);
+  tor2.rotation.x = Math.PI / 3;
+  tor2.rotation.z = Math.PI / 6;
+  scene.add(tor2);
+  objects.push({ mesh: tor2, rx: -0.003, ry: -0.002 });
+
+  // Particle field
+  const particleCount = 300;
+  const positions = new Float32Array(particleCount * 3);
+  for (let i = 0; i < particleCount; i++) {
+    positions[i * 3] = (Math.random() - 0.5) * 14;
+    positions[i * 3 + 1] = (Math.random() - 0.5) * 14;
+    positions[i * 3 + 2] = (Math.random() - 0.5) * 10 - 3;
+  }
+  const partGeo = new THREE.BufferGeometry();
+  partGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  const partMat = new THREE.PointsMaterial({ color: 0x00d4ff, size: 0.02, transparent: true, opacity: 0.5 });
+  const particles = new THREE.Points(partGeo, partMat);
+  scene.add(particles);
+
+  // Mouse parallax
+  let mouseX = 0, mouseY = 0;
+  document.addEventListener('mousemove', (e) => {
+    mouseX = (e.clientX / window.innerWidth - 0.5) * 0.8;
+    mouseY = (e.clientY / window.innerHeight - 0.5) * 0.8;
+  });
+
+  let animId;
+  function animate() {
+    animId = requestAnimationFrame(animate);
+    objects.forEach(o => {
+      o.mesh.rotation.x += o.rx;
+      o.mesh.rotation.y += o.ry;
+    });
+    particles.rotation.y += 0.0005;
+    camera.position.x += (mouseX - camera.position.x) * 0.03;
+    camera.position.y += (-mouseY - camera.position.y) * 0.03;
+    camera.lookAt(scene.position);
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  window.addEventListener('resize', () => {
+    const w = canvas.clientWidth, h = canvas.clientHeight;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  });
+})();
+
+// ===== SCROLL REVEALS =====
+const revealEls = document.querySelectorAll('.reveal');
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revealObserver.unobserve(e.target); } });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+revealEls.forEach(el => revealObserver.observe(el));
+
+// ===== TECH BARS ANIMATION =====
+const barObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.querySelectorAll('.tech-bar-fill').forEach(fill => fill.classList.add('animated'));
+      barObserver.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.3 });
+document.querySelectorAll('.tech-card').forEach(card => barObserver.observe(card));
+
+// ===== COUNTER ANIMATION =====
+function animateCounter(el) {
+  const target = parseFloat(el.dataset.count);
+  const isDecimal = el.dataset.count.includes('.');
+  const suffix = isDecimal ? '' : '';
+  let start = 0;
+  const duration = 1800;
+  const step = (timestamp) => {
+    if (!start) start = timestamp;
+    const progress = Math.min((timestamp - start) / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const current = target * eased;
+    el.textContent = isDecimal ? current.toFixed(1) : Math.floor(current).toLocaleString();
+    if (progress < 1) requestAnimationFrame(step);
+    else el.textContent = isDecimal ? target.toFixed(1) : target.toLocaleString();
+  };
+  requestAnimationFrame(step);
+}
+const counterObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      animateCounter(e.target);
+      counterObserver.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.5 });
+document.querySelectorAll('[data-count]').forEach(el => counterObserver.observe(el));
+</script>
+</body>
+</html>
