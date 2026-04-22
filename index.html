@@ -883,7 +883,7 @@ function renderRoute() {
 
   initReveal();
   initTechBars();
-  closeMobileMenu();
+    closeMobileMenu();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -1003,7 +1003,6 @@ document.querySelectorAll('[data-count]').forEach(el => counterObserver.observe(
     positions[i * 3 + 1] = (Math.random() - 0.5) * 14;
     positions[i * 3 + 2] = (Math.random() - 0.5) * 10 - 3;
   }
-
   const partGeo = new THREE.BufferGeometry();
   partGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
   const partMat = new THREE.PointsMaterial({ color: 0x00d4ff, size: 0.02, transparent: true, opacity: 0.5 });
