@@ -605,7 +605,7 @@ footer {
 (function(){
   const t = document.querySelector('[data-theme-toggle]');
   const r = document.documentElement;
-  let d = 'dark'; // force dark as default for futuristic aesthetic
+  let d = 'dark';
   r.setAttribute('data-theme', d);
   if(t) t.addEventListener('click', () => {
     d = d === 'dark' ? 'light' : 'dark';
@@ -621,6 +621,339 @@ const toggle = document.getElementById('nav-toggle');
 const nav = document.getElementById('main-nav');
 toggle && toggle.addEventListener('click', () => nav.classList.toggle('open'));
 
+// ===== ROUTER =====
+const pageContent = document.getElementById('page-content');
+
+function homePage() {
+  return `
+    <section id="features">
+      <div class="container">
+        <div class="reveal">
+          <p class="section-label">// Recursos</p>
+          <h2 class="section-title">Engenharia sem compromisso</h2>
+          <p class="section-body">Cada componente é projetado para máxima performance e elegância técnica.</p>
+        </div>
+        <div class="features-grid">
+          <div class="feature-card large reveal reveal-delay-1">
+            <svg class="feature-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="4" y="4" width="40" height="40" rx="4"/>
+              <path d="M14 24l6 6 14-14" stroke-width="2"/>
+              <circle cx="24" cy="24" r="16" stroke-width="1" opacity="0.3"/>
+            </svg>
+            <h3 class="feature-title">Processamento em Tempo Real</h3>
+            <p class="feature-desc">Pipelines de dados de alta velocidade com latência submilissegundo. Processamento paralelo com arquitetura distribuída.</p>
+          </div>
+
+          <div class="feature-card medium reveal reveal-delay-2">
+            <svg class="feature-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M24 4L44 14v20L24 44 4 34V14z"/>
+              <path d="M24 4v40M4 14l20 10 20-10"/>
+            </svg>
+            <h3 class="feature-title">Arquitetura 3D</h3>
+            <p class="feature-desc">Estruturas visuais imersivas para aplicações futuristas de alto impacto.</p>
+          </div>
+
+          <div class="feature-card full reveal reveal-delay-1">
+            <div>
+              <svg class="feature-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="24" cy="24" r="20"/>
+                <path d="M24 4v8M24 36v8M4 24h8M36 24h8"/>
+                <circle cx="24" cy="24" r="8"/>
+              </svg>
+              <h3 class="feature-title">Inteligência Neural</h3>
+              <p class="feature-desc">Modelos adaptativos e automação contínua orientada por experiência.</p>
+            </div>
+            <div class="feature-visual">
+              <div class="holo-grid">
+                <div class="holo-cell active"></div><div class="holo-cell"></div><div class="holo-cell active"></div>
+                <div class="holo-cell"></div><div class="holo-cell active"></div><div class="holo-cell active"></div>
+                <div class="holo-cell"></div><div class="holo-cell active"></div>
+                <div class="holo-cell"></div><div class="holo-cell active"></div><div class="holo-cell"></div>
+                <div class="holo-cell active"></div><div class="holo-cell"></div><div class="holo-cell active"></div>
+                <div class="holo-cell active"></div><div class="holo-cell"></div>
+                <div class="holo-cell active"></div><div class="holo-cell"></div><div class="holo-cell active"></div>
+                <div class="holo-cell active"></div><div class="holo-cell"></div><div class="holo-cell active"></div>
+                <div class="holo-cell"></div><div class="holo-cell active"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="feature-card small reveal reveal-delay-1">
+            <h3 class="feature-title">Analytics</h3>
+            <p class="feature-desc">Métricas em tempo real com visualização elegante.</p>
+          </div>
+          <div class="feature-card small reveal reveal-delay-2">
+            <h3 class="feature-title">Segurança</h3>
+            <p class="feature-desc">Criptografia, proteção e confiabilidade.</p>
+          </div>
+          <div class="feature-card small reveal reveal-delay-3">
+            <h3 class="feature-title">Automação</h3>
+            <p class="feature-desc">Fluxos inteligentes para escalar operação.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tech">
+      <div class="container">
+        <div class="tech-header">
+          <div class="reveal">
+            <p class="section-label">// Stack Técnico</p>
+            <h2 class="section-title">Construído com excelência</h2>
+          </div>
+          <p class="section-body reveal reveal-delay-1" style="max-width: 40ch; text-align: right;">
+            Tecnologias de ponta selecionadas para cada camada da arquitetura.
+          </p>
+        </div>
+        <div class="tech-cards">
+          <div class="tech-card reveal reveal-delay-1">
+            <span class="tech-name">Three.js</span>
+            <span class="tech-tag">3D Engine</span>
+            <div class="tech-bar"><div class="tech-bar-fill" style="--fill-width: 95%"></div></div>
+          </div>
+          <div class="tech-card reveal reveal-delay-2">
+            <span class="tech-name">TypeScript</span>
+            <span class="tech-tag">Frontend</span>
+            <div class="tech-bar"><div class="tech-bar-fill" style="--fill-width: 98%"></div></div>
+          </div>
+          <div class="tech-card reveal reveal-delay-3">
+            <span class="tech-name">Rust</span>
+            <span class="tech-tag">Backend</span>
+            <div class="tech-bar"><div class="tech-bar-fill" style="--fill-width: 85%"></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="cta">
+      <div class="container">
+        <div class="cta-box reveal">
+          <h2 class="cta-title">Pronto para o <span>futuro</span>?</h2>
+          <p class="cta-sub">Junte-se a quem já está construindo experiências digitais de próxima geração.</p>
+          <div class="cta-actions">
+            <a href="#contato" class="btn-primary-lg">Entrar em contato</a>
+            <a href="#projetos" class="btn-ghost-lg">Ver projetos</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  `;
+}
+
+function sobrePage() {
+  return `
+    <section id="features">
+      <div class="container">
+        <div class="reveal">
+          <p class="section-label">// Sobre</p>
+          <h2 class="section-title">O que é a TakedaJP</h2>
+          <p class="section-body">
+            A TakedaJP é uma proposta digital com estética futurista, foco em tecnologia, performance visual e experiência de alto impacto.
+          </p>
+        </div>
+
+        <div class="features-grid">
+          <div class="feature-card large reveal reveal-delay-1">
+            <h3 class="feature-title">Visão</h3>
+            <p class="feature-desc">
+              Criar produtos e experiências que unam design marcante, tecnologia moderna e apresentação profissional.
+            </p>
+          </div>
+
+          <div class="feature-card medium reveal reveal-delay-2">
+            <h3 class="feature-title">Estilo</h3>
+            <p class="feature-desc">
+              Identidade inspirada em cyberpunk, interfaces premium, tipografia forte e motion design elegante.
+            </p>
+          </div>
+
+          <div class="feature-card full reveal reveal-delay-3">
+            <div>
+              <h3 class="feature-title">Objetivo do projeto</h3>
+              <p class="feature-desc">
+                Estruturar uma presença digital sólida, expansível e pronta para receber páginas como portfólio, documentação, dashboard e contato.
+              </p>
+            </div>
+            <div class="feature-visual">
+              <div class="holo-grid">
+                <div class="holo-cell active"></div><div class="holo-cell active"></div><div class="holo-cell"></div>
+                <div class="holo-cell active"></div><div class="holo-cell"></div><div class="holo-cell active"></div>
+                <div class="holo-cell"></div><div class="holo-cell active"></div>
+                <div class="holo-cell active"></div><div class="holo-cell"></div><div class="holo-cell active"></div>
+                <div class="holo-cell"></div><div class="holo-cell active"></div><div class="holo-cell"></div>
+                <div class="holo-cell active"></div><div class="holo-cell active"></div>
+                <div class="holo-cell"></div><div class="holo-cell active"></div><div class="holo-cell"></div>
+                <div class="holo-cell active"></div><div class="holo-cell"></div><div class="holo-cell active"></div>
+                <div class="holo-cell active"></div><div class="holo-cell"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  `;
+}
+
+function projetosPage() {
+  return `
+    <section id="features">
+      <div class="container">
+        <div class="reveal">
+          <p class="section-label">// Projetos</p>
+          <h2 class="section-title">Projetos em destaque</h2>
+          <p class="section-body">
+            Uma estrutura inicial para apresentar produtos, estudos visuais, aplicações e soluções criadas dentro do universo TakedaJP.
+          </p>
+        </div>
+
+        <div class="features-grid">
+          <div class="feature-card small reveal reveal-delay-1">
+            <h3 class="feature-title">Project One</h3>
+            <p class="feature-desc">Landing page futurista com forte direção visual e animação 3D.</p>
+          </div>
+
+          <div class="feature-card small reveal reveal-delay-2">
+            <h3 class="feature-title">Project Two</h3>
+            <p class="feature-desc">Painel conceitual com foco em dados, performance e visual premium.</p>
+          </div>
+
+          <div class="feature-card small reveal reveal-delay-3">
+            <h3 class="feature-title">Project Three</h3>
+            <p class="feature-desc">Sistema experimental para navegação, branding e prototipação.</p>
+          </div>
+
+          <div class="feature-card full reveal reveal-delay-4">
+            <div>
+              <h3 class="feature-title">Portfólio expansível</h3>
+              <p class="feature-desc">
+                Esta área pode crescer depois com imagem de capa, link do GitHub, descrição do projeto, stack e status.
+              </p>
+            </div>
+            <div class="feature-visual">
+              <div class="holo-grid">
+                <div class="holo-cell active"></div><div class="holo-cell"></div><div class="holo-cell active"></div>
+                <div class="holo-cell active"></div><div class="holo-cell"></div><div class="holo-cell active"></div>
+                <div class="holo-cell active"></div><div class="holo-cell"></div>
+                <div class="holo-cell"></div><div class="holo-cell active"></div><div class="holo-cell"></div>
+                <div class="holo-cell active"></div><div class="holo-cell active"></div><div class="holo-cell"></div>
+                <div class="holo-cell active"></div><div class="holo-cell"></div>
+                <div class="holo-cell active"></div><div class="holo-cell active"></div><div class="holo-cell"></div>
+                <div class="holo-cell active"></div><div class="holo-cell"></div><div class="holo-cell active"></div>
+                <div class="holo-cell"></div><div class="holo-cell active"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  `;
+}
+
+function contatoPage() {
+  return `
+    <section id="cta">
+      <div class="container">
+        <div class="cta-box reveal">
+          <p class="section-label">// Contato</p>
+          <h2 class="cta-title">Vamos criar algo <span>forte</span></h2>
+          <p class="cta-sub">
+            Você pode usar esta seção para colocar e-mail, formulário, WhatsApp, Discord ou links profissionais.
+          </p>
+          <div class="cta-actions">
+            <a href="mailto:seuemail@exemplo.com" class="btn-primary-lg">Enviar e-mail</a>
+            <a href="https://github.com/takeda88" target="_blank" rel="noopener noreferrer" class="btn-ghost-lg">Ver GitHub</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  `;
+}
+
+const routes = {
+  home: homePage,
+  sobre: sobrePage,
+  projetos: projetosPage,
+  contato: contatoPage
+};
+
+function renderRoute() {
+  const hash = window.location.hash.replace('#', '') || 'home';
+  const render = routes[hash] || homePage;
+  pageContent.innerHTML = render();
+
+  initReveal();
+  initTechBars();
+  closeMobileMenu();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function closeMobileMenu() {
+  if (nav) nav.classList.remove('open');
+}
+
+function initReveal() {
+  const revealEls = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  revealEls.forEach(el => observer.observe(el));
+}
+
+function initTechBars() {
+  const techCards = document.querySelectorAll('.tech-card');
+  if (!techCards.length) return;
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.querySelectorAll('.tech-bar-fill').forEach(fill => {
+          fill.classList.add('animated');
+        });
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.3 });
+
+  techCards.forEach(card => observer.observe(card));
+}
+
+// ===== HERO COUNTERS =====
+function animateCounter(el) {
+  const target = parseFloat(el.dataset.count);
+  const isDecimal = el.dataset.count.includes('.');
+  let start = 0;
+  const duration = 1800;
+
+  const step = (timestamp) => {
+    if (!start) start = timestamp;
+    const progress = Math.min((timestamp - start) / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const current = target * eased;
+    el.textContent = isDecimal ? current.toFixed(1) : Math.floor(current).toLocaleString();
+    if (progress < 1) requestAnimationFrame(step);
+    else el.textContent = isDecimal ? target.toFixed(1) : target.toLocaleString();
+  };
+
+  requestAnimationFrame(step);
+}
+
+const counterObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      animateCounter(e.target);
+      counterObserver.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.5 });
+
+document.querySelectorAll('[data-count]').forEach(el => counterObserver.observe(el));
+
 // ===== THREE.JS 3D SCENE =====
 (function() {
   const canvas = document.getElementById('canvas-3d');
@@ -634,24 +967,20 @@ toggle && toggle.addEventListener('click', () => nav.classList.toggle('open'));
   const camera = new THREE.PerspectiveCamera(60, canvas.clientWidth / canvas.clientHeight, 0.1, 100);
   camera.position.set(0, 0, 5);
 
-  // Geometric wireframe objects
   const objects = [];
 
-  // Main icosahedron
   const icoGeo = new THREE.IcosahedronGeometry(1.4, 1);
   const icoMat = new THREE.MeshBasicMaterial({ color: 0x00d4ff, wireframe: true, transparent: true, opacity: 0.25 });
   const ico = new THREE.Mesh(icoGeo, icoMat);
   scene.add(ico);
   objects.push({ mesh: ico, rx: 0.003, ry: 0.005 });
 
-  // Inner octahedron
   const octGeo = new THREE.OctahedronGeometry(0.9);
   const octMat = new THREE.MeshBasicMaterial({ color: 0x00d4ff, wireframe: true, transparent: true, opacity: 0.4 });
   const oct = new THREE.Mesh(octGeo, octMat);
   scene.add(oct);
   objects.push({ mesh: oct, rx: -0.006, ry: 0.003 });
 
-  // Torus
   const torGeo = new THREE.TorusGeometry(2.2, 0.015, 6, 80);
   const torMat = new THREE.MeshBasicMaterial({ color: 0x00d4ff, transparent: true, opacity: 0.2 });
   const tor = new THREE.Mesh(torGeo, torMat);
@@ -659,7 +988,6 @@ toggle && toggle.addEventListener('click', () => nav.classList.toggle('open'));
   scene.add(tor);
   objects.push({ mesh: tor, rx: 0.002, ry: 0.004 });
 
-  // Second torus rotated
   const tor2Geo = new THREE.TorusGeometry(2.5, 0.01, 6, 80);
   const tor2Mat = new THREE.MeshBasicMaterial({ color: 0xffd700, transparent: true, opacity: 0.12 });
   const tor2 = new THREE.Mesh(tor2Geo, tor2Mat);
@@ -668,7 +996,6 @@ toggle && toggle.addEventListener('click', () => nav.classList.toggle('open'));
   scene.add(tor2);
   objects.push({ mesh: tor2, rx: -0.003, ry: -0.002 });
 
-  // Particle field
   const particleCount = 300;
   const positions = new Float32Array(particleCount * 3);
   for (let i = 0; i < particleCount; i++) {
@@ -676,22 +1003,21 @@ toggle && toggle.addEventListener('click', () => nav.classList.toggle('open'));
     positions[i * 3 + 1] = (Math.random() - 0.5) * 14;
     positions[i * 3 + 2] = (Math.random() - 0.5) * 10 - 3;
   }
+
   const partGeo = new THREE.BufferGeometry();
   partGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
   const partMat = new THREE.PointsMaterial({ color: 0x00d4ff, size: 0.02, transparent: true, opacity: 0.5 });
   const particles = new THREE.Points(partGeo, partMat);
   scene.add(particles);
 
-  // Mouse parallax
   let mouseX = 0, mouseY = 0;
   document.addEventListener('mousemove', (e) => {
     mouseX = (e.clientX / window.innerWidth - 0.5) * 0.8;
     mouseY = (e.clientY / window.innerHeight - 0.5) * 0.8;
   });
 
-  let animId;
   function animate() {
-    animId = requestAnimationFrame(animate);
+    requestAnimationFrame(animate);
     objects.forEach(o => {
       o.mesh.rotation.x += o.rx;
       o.mesh.rotation.y += o.ry;
@@ -712,51 +1038,13 @@ toggle && toggle.addEventListener('click', () => nav.classList.toggle('open'));
   });
 })();
 
-// ===== SCROLL REVEALS =====
-const revealEls = document.querySelectorAll('.reveal');
-const revealObserver = new IntersectionObserver((entries) => {
-  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revealObserver.unobserve(e.target); } });
-}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-revealEls.forEach(el => revealObserver.observe(el));
+window.addEventListener('hashchange', renderRoute);
 
-// ===== TECH BARS ANIMATION =====
-const barObserver = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.querySelectorAll('.tech-bar-fill').forEach(fill => fill.classList.add('animated'));
-      barObserver.unobserve(e.target);
-    }
-  });
-}, { threshold: 0.3 });
-document.querySelectorAll('.tech-card').forEach(card => barObserver.observe(card));
-
-// ===== COUNTER ANIMATION =====
-function animateCounter(el) {
-  const target = parseFloat(el.dataset.count);
-  const isDecimal = el.dataset.count.includes('.');
-  const suffix = isDecimal ? '' : '';
-  let start = 0;
-  const duration = 1800;
-  const step = (timestamp) => {
-    if (!start) start = timestamp;
-    const progress = Math.min((timestamp - start) / duration, 1);
-    const eased = 1 - Math.pow(1 - progress, 3);
-    const current = target * eased;
-    el.textContent = isDecimal ? current.toFixed(1) : Math.floor(current).toLocaleString();
-    if (progress < 1) requestAnimationFrame(step);
-    else el.textContent = isDecimal ? target.toFixed(1) : target.toLocaleString();
-  };
-  requestAnimationFrame(step);
+if (!window.location.hash) {
+  window.location.hash = '#home';
+} else {
+  renderRoute();
 }
-const counterObserver = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      animateCounter(e.target);
-      counterObserver.unobserve(e.target);
-    }
-  });
-}, { threshold: 0.5 });
-document.querySelectorAll('[data-count]').forEach(el => counterObserver.observe(el));
 </script>
 </body>
 </html>
